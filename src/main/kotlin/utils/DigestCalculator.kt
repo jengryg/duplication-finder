@@ -57,9 +57,9 @@ object DigestCalculator : Logging {
     }
 
     /**
-     * Calculates the [ALGORITHM] hash of the given [list] feeding each entry of the list to the [MessageDigest] in the
-     * order given by [list]. Note: The order of the [list] matters for the resulting hash.
-     * This method is not permutation invariant.
+     * Calculates the [ALGORITHM] hash of the given [list] feeding each entry of the list to the [MessageDigest].
+     * The list is ordered using the [HexFormat.UpperCase] representation of the [ByteArray] in it.
+     * Thus, this method is permutation invariant.
      *
      * @param list the list of [ByteArray] to feed into the hashing algorithm
      *
@@ -68,7 +68,7 @@ object DigestCalculator : Logging {
     fun hash(list: List<ByteArray>): ByteArray {
         val digest = MessageDigest.getInstance(ALGORITHM)
 
-        list.forEach { digest.update(it) }
+        list.sortedBy { it.toHexString(HexFormat.UpperCase) }.forEach { digest.update(it) }
 
         return digest.digest().also {
             log.atDebug().setMessage("Calculated MessageDigest of List.")
