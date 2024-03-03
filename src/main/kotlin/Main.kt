@@ -1,32 +1,31 @@
-import ch.qos.logback.classic.Level
-import model.DirectoryRecord
-import model.RecordPersistence
-import worker.DuplicateFinder
-import scanner.Indexer
+import analyzer.AnalyzerJob
+import utils.FileIo
+import java.nio.file.Paths
+import kotlin.io.path.isDirectory
 
 fun main(args: Array<String>) {
-    setLoggingLevel(Level.TRACE)
-
-    val sourceDirectoryPath = "C:\\DATA"
-    // what directory to create the index from
-
-    val outFile = sourceDirectoryPath.replace("\\", "__").replace(":", "_")
-    // use the sourceDirectoryPath as name component for the outFiles
-
-    val indexer = Indexer(scanPath = sourceDirectoryPath)
-    indexer.run()
-
-    RecordPersistence.save("data\\index_$outFile.json", indexer.root)
-
-    val root = RecordPersistence.load<DirectoryRecord>("data\\index_$outFile.json")
-
-    val duplicateFinder = DuplicateFinder(root = root)
-
-    duplicateFinder.directories("data\\duplicate_directories_$outFile.csv") {
-        true
+    require(args.size in 2..3) {
+        "Invalid Arguments. Use <job name> <path to scan or index file> [<log level>:INFO]. Received ${args.size} arguments: ${
+            args.joinToString(
+                " "
+            )
+        }"
     }
 
-    duplicateFinder.files("data\\duplicate_files_$outFile.csv") {
-        true
+    setLoggingLevel(args.getOrElse(2) { "INFO" })
+
+    val jobName = args[0].also {
+        try {
+            FileIo.ensureDirectoryExists("data/$it")
+        } catch (ex: Exception) {
+            throw IllegalArgumentException("Could not create the job directory data/$it", ex)
+        }
     }
+
+    val pathToScan = args[1].also {
+        require(Paths.get(args[1]).isDirectory()) { "Path to scan must be an actual directory." }
+    }
+
+    val analyzerJob = AnalyzerJob(jobName, pathToScan)
+    analyzerJob.run()
 }

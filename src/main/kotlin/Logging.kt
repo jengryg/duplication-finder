@@ -22,9 +22,33 @@ inline fun <reified T : Logging> T.logger(): Logger = LoggerFactory.getLogger(T:
 
 /**
  * Simple method to set the logging level for the application.
+ *
  * @param level the logging level from logback classic to use
  */
 fun setLoggingLevel(level: Level) {
     val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as ch.qos.logback.classic.Logger
     rootLogger.level = level
+}
+
+/**
+ * Simple method to set the logging level for the application.
+ * Parses the given string as log level case-insensitive.
+ *
+ * @param level the logging level from logback classic to use
+ *
+ * @throws IllegalArgumentException if the string can not be mapped to any of the levels
+ */
+fun setLoggingLevel(level: String) {
+    when (level.uppercase()) {
+        "ALL" -> Level.ALL
+        "TRACE" -> Level.TRACE
+        "DEBUG" -> Level.DEBUG
+        "INFO" -> Level.INFO
+        "WARN" -> Level.WARN
+        "ERROR" -> Level.ERROR
+        "OFF" -> Level.OFF
+        else -> throw IllegalArgumentException("Can not resolve logging level from given argument: $level")
+    }.let {
+        setLoggingLevel(it)
+    }
 }
