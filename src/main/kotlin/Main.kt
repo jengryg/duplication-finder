@@ -2,7 +2,7 @@ import ch.qos.logback.classic.Level
 import model.DirectoryRecord
 import model.RecordPersistence
 import worker.DuplicateFinder
-import worker.Indexer
+import scanner.Indexer
 
 fun main(args: Array<String>) {
     setLoggingLevel(Level.TRACE)
@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
     val outFile = sourceDirectoryPath.replace("\\", "__").replace(":", "_")
     // use the sourceDirectoryPath as name component for the outFiles
 
-    val indexer = Indexer(scanPath = sourceDirectoryPath, hashing = true)
+    val indexer = Indexer(scanPath = sourceDirectoryPath)
     indexer.run()
 
     RecordPersistence.save("data\\index_$outFile.json", indexer.root)
