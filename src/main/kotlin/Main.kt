@@ -1,7 +1,6 @@
 import ch.qos.logback.classic.Level
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import persistence.DirectoryRecordPersistence
+import model.DirectoryRecord
+import model.RecordPersistence
 import worker.DuplicateFinder
 import worker.Indexer
 
@@ -17,9 +16,9 @@ fun main(args: Array<String>) {
     val indexer = Indexer(scanPath = sourceDirectoryPath, hashing = true)
     indexer.run()
 
-    DirectoryRecordPersistence.save("data\\index_$outFile.json", indexer.root)
+    RecordPersistence.save("data\\index_$outFile.json", indexer.root)
 
-    val root = DirectoryRecordPersistence.load("data\\index_$outFile.json")
+    val root = RecordPersistence.load<DirectoryRecord>("data\\index_$outFile.json")
 
     val duplicateFinder = DuplicateFinder(root = root)
 

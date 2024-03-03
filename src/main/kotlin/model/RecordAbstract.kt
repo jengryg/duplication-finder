@@ -1,32 +1,39 @@
 package model
 
+import SIZE_IN_BYTES_FIXED_LENGTH_IN_DECIMAL
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.util.UUID
+import java.util.*
 
 /**
- * An abstract class to represent a [java.nio.file.Path] element.
+ * An abstract class to represent an element in the directory structure.
  */
 abstract class RecordAbstract(
-    val id: UUID = UUID.randomUUID(),
-    val name: String,
-    val path: String,
-    val ext: String? = null
-) {
-    /**
-     * The size in bytes of the represented element in the file system.
-     */
-    abstract var size: Long
+    override val id: UUID = UUID.randomUUID(),
+    override val name: String,
+    override val path: String,
+) : IRecord {
 
     /**
-     * The [worker.DigestCalculator] checksum in bytes of the represented element in the file system.
+     * The calculated [hash] value represented in HEX.
      */
-    abstract var hash: ByteArray
-
-    @get:JsonIgnore
     @OptIn(ExperimentalStdlibApi::class)
-    val hashAsHex: String get() = hash.toHexString(HexFormat.UpperCase)
+    val hashHex: String get() = hash.toHexString()
+
+    /**
+     * Use the calculated [hash] value represented in HEX followed by a `-` (dash) and the [size] in bytes padded from
+     * the left with ` ` (space) until the fixed length of [SIZE_IN_BYTES_FIXED_LENGTH_IN_DECIMAL] is reached.
+     *
+     * `<HASH in HEX>-<SIZE IN BYTES PADDED TO FIXED LENGTH>`
+     */
+    @get:JsonIgnore
+    override val groupId: String
+        get() {
+            return "${hashHex}-${
+                size.toString().padStart(SIZE_IN_BYTES_FIXED_LENGTH_IN_DECIMAL)
+            }"
+        }
 
     override fun toString(): String {
-        return "${this::class.simpleName}: id=$id, hash=$hashAsHex, path=$path, size=$size, ext=$ext"
+        return "${this::class.simpleName}: id=$id, path=$path, size=$size"
     }
 }

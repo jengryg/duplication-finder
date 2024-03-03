@@ -1,14 +1,13 @@
 package worker
 
 import Logging
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import logger
 import model.DirectoryRecord
 import model.FileRecord
+import utils.DigestCalculator
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.StandardOpenOption
 import kotlin.io.path.*
 
 /**
@@ -16,7 +15,7 @@ import kotlin.io.path.*
  * of [DirectoryRecord] and [FileRecord] instances representing the file system.
  *
  * If [hashing] is set to true, [DigestCalculator] is used to calculate the checksum of each file found in the tree.
- * See [DigestCalculator.hashFile] for more information on the hashing.
+ * See [DigestCalculator.hash] for more information on the hashing.
  */
 class Indexer(
     private val scanPath: String,
@@ -120,9 +119,8 @@ class Indexer(
         FileRecord(
             name = foundPath.name,
             path = foundPath.pathString,
-            ext = foundPath.extension,
             size = foundPath.fileSize(),
-            hash = if (hashing) DigestCalculator.hashFile(foundPath) else ByteArray(32)
+            hash = if (hashing) DigestCalculator.hash(foundPath) else ByteArray(32)
         ).also {
             parentRecord.add(it)
             // add the newly found file as child to the parent DirectoryRecord containing it
