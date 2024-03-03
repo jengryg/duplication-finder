@@ -6,8 +6,7 @@ import worker.DuplicateFinder
 import worker.Indexer
 
 fun main(args: Array<String>) {
-    val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as ch.qos.logback.classic.Logger
-    rootLogger.level = Level.INFO
+    setLoggingLevel(Level.TRACE)
 
     val sourceDirectoryPath = "C:\\DATA"
     // what directory to create the index from

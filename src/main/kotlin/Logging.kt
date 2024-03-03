@@ -1,3 +1,4 @@
+import ch.qos.logback.classic.Level
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -8,7 +9,6 @@ import org.slf4j.LoggerFactory
  *
  * Create a private property inside your class that will provide the [Logger] instance returned by the [logger] method.
  * This property can then be used to log inside your class, where the logger name is automatically assigned.
- *
  */
 interface Logging
 
@@ -19,3 +19,12 @@ interface Logging
  * We use `inline` and `reified` here to avoid reflection at runtime.
  */
 inline fun <reified T : Logging> T.logger(): Logger = LoggerFactory.getLogger(T::class.java)
+
+/**
+ * Simple method to set the logging level for the application.
+ * @param level the logging level from logback classic to use
+ */
+fun setLoggingLevel(level: Level) {
+    val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as ch.qos.logback.classic.Logger
+    rootLogger.level = level
+}
