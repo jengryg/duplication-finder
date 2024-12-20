@@ -1,4 +1,4 @@
-package scanner
+package analyzer.scanner
 
 import model.DirectoryRecord
 import java.nio.file.Path

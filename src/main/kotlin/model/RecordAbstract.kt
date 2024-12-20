@@ -17,6 +17,7 @@ abstract class RecordAbstract(
      * The calculated [hash] value represented in HEX.
      */
     @OptIn(ExperimentalStdlibApi::class)
+    @get:JsonIgnore
     val hashHex: String get() = hash.toHexString()
 
     /**

@@ -1,20 +1,35 @@
 import analyzer.AnalyzerJob
 import analyzer.ComparatorJob
+import analyzer.ExistenceJob
+import analyzer.ScannerJob
 
 class Program(private val keyArgs: KeyArgs) {
     fun main() {
         when (keyArgs.getOrThrow("type").lowercase()) {
+            "indexer" -> indexer()
             "duplicates" -> duplicates()
             "comparator" -> comparator()
+            "existence" -> existence()
             else -> require(false) {
                 """
                 Use type=<choice> argument to select the utility you want to use.
                 Available options for type are:
-                    duplicates: to search for duplicates inside the complete recursive structure of a given directory
-                    comparator: to compare a source directory to a target directory
+                    indexer: create a json directory tree for the given directory
+                    duplicates: to search for duplicates inside a json directory tree
+                    comparator: to compare a source json directory tree to a target json directory tree
+                    existence: check if the files in the source json directory tree also exist in the target directory tree
             """.trimIndent()
             }
         }
+    }
+
+    private fun indexer() {
+        val scannerJob = ScannerJob(
+            jobName = keyArgs.getOrThrow("jobName"),
+            indexName = keyArgs.getOrThrow("indexName"),
+            scanPath = keyArgs.getOrThrow("scanPath"),
+        )
+        scannerJob.run()
     }
 
     private fun duplicates() {
@@ -32,5 +47,15 @@ class Program(private val keyArgs: KeyArgs) {
             targetPath = keyArgs.getOrThrow("targetPath"),
         )
         comparatorJob.run()
+    }
+
+    private fun existence() {
+        val existenceJob = ExistenceJob(
+            jobName = keyArgs.getOrThrow("jobName"),
+            outputName = keyArgs.getOrThrow("outputName"),
+            sourceIndex = keyArgs.getOrThrow("sourceIndex"),
+            targetIndex = keyArgs.getOrThrow("targetIndex"),
+        )
+        existenceJob.run()
     }
 }

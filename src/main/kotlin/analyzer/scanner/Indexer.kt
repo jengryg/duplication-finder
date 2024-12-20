@@ -1,4 +1,4 @@
-package scanner
+package analyzer.scanner
 
 import Logging
 import logger

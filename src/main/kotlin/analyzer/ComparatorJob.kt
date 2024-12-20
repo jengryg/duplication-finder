@@ -6,7 +6,7 @@ import analyzer.comparator.CompartorMatcher
 import logger
 import model.IRecord
 import model.RecordPersistence
-import scanner.Indexer
+import analyzer.scanner.Indexer
 import utils.FileIo
 import kotlin.io.path.pathString
 

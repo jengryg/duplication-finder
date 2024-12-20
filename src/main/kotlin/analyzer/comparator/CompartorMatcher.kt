@@ -40,7 +40,7 @@ class CompartorMatcher(
 
         sourceDirectories.forEach { record ->
             val targetMatches = targetDirectories[record.groupId] ?: emptyList()
-            if (foundResults[record.id] == false) {
+            if (foundResults[record.id] != true) {
                 // this record was not yet processed before
                 result.add(
                     ComparatorRecord(
