@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.slf4j:slf4j-api:2.0.10")
+    implementation("org.slf4j:slf4j-api:2.0.16")
     implementation("ch.qos.logback:logback-classic:1.4.14")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
