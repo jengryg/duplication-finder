@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.2.0"
     application
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
