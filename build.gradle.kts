@@ -3,7 +3,7 @@ plugins {
     application
     // Optional Gradle plugin for enhanced type safety and schema generation
     // https://kotlin.github.io/dataframe/gradle.html
-    id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
+    id("org.jetbrains.kotlinx.dataframe") version "1727"
 }
 
 group = "utilities"
